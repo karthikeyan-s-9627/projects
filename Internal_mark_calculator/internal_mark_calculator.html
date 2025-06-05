@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Internal Marks Calculator</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script> 
+  <style>
+    body {
+      background: linear-gradient(135deg, #0f0f1a, #1a1a2e);
+      font-family: 'Poppins', sans-serif;
+    }
+    .glass {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    }
+    .card-hover:hover {
+      transform: translateY(-5px);
+      transition: all 0.3s ease-in-out;
+    }
+  </style>
+</head>
+<body class="text-white min-h-screen flex items-center justify-center p-6">
+
+  <div class="w-full max-w-3xl glass rounded-xl p-8 card-hover shadow-2xl">
+    <h1 class="text-3xl font-bold text-center mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">
+      Internal Marks Calculator
+    </h1>
+
+    <!-- Tabs -->
+    <div class="flex justify-center gap-4 mb-8">
+      <label class="cursor-pointer">
+        <input type="radio" name="calculatorType" value="theory" onclick="toggleCalculator('theory')" checked />
+        <span class="ml-2">Theory Internal Calculator</span>
+      </label>
+      <label class="cursor-pointer">
+        <input type="radio" name="calculatorType" value="practical" onclick="toggleCalculator('practical')" />
+        <span class="ml-2">Practical Internal Calculator</span>
+      </label>
+    </div>
+
+    <!-- Theory Section -->
+    <div id="theorySection" class="calculator-section active">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+        <input type="number" id="ut1" placeholder="UT-1 (Max 50)" class="p-3 rounded-lg bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+        <input type="number" id="ut2" placeholder="UT-2 (Max 50)" class="p-3 rounded-lg bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+        <input type="number" id="ut3" placeholder="UT-3 (Max 50)" class="p-3 rounded-lg bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+        <input type="number" id="model" placeholder="Model Exam (Max 100)" class="p-3 rounded-lg bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+      </div>
+      <div class="mb-6 flex items-center">
+        <input type="checkbox" id="assignment" class="mr-2"/>
+        <label for="assignment">Assignment Submitted</label>
+      </div>
+      <button onclick="calculateTheory()" class="w-full py-3 rounded-lg bg-gradient-to-r from-green-400 to-blue-500 hover:from-blue-500 hover:to-green-400 font-semibold transition-all duration-300 transform hover:scale-105">
+        Calculate Internal Marks (Theory)
+      </button>
+      <div id="resultTheory" class="mt-6 text-center text-xl font-semibold text-yellow-400"></div>
+    </div>
+
+    <!-- Practical Section (Placeholder) -->
+    <div id="practicalSection" class="calculator-section hidden">
+      <p class="text-center text-lg text-gray-300 mb-4">Practical Calculator will be implemented soon.</p>
+      <div class="flex justify-center">
+        <div class="w-16 h-16 border-t-4 border-b-4 border-blue-500 rounded-full animate-spin"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function toggleCalculator(type) {
+      document.getElementById('theorySection').classList.toggle('active', type === 'theory');
+      document.getElementById('theorySection').classList.toggle('hidden', type !== 'theory');
+      document.getElementById('practicalSection').classList.toggle('active', type === 'practical');
+      document.getElementById('practicalSection').classList.toggle('hidden', type !== 'practical');
+    }
+
+    function calculateTheory() {
+      const ut1 = parseFloat(document.getElementById('ut1').value) || 0;
+      const ut2 = parseFloat(document.getElementById('ut2').value) || 0;
+      const ut3 = parseFloat(document.getElementById('ut3').value) || 0;
+      const model = parseFloat(document.getElementById('model').value) || 0;
+      const assignment = document.getElementById('assignment').checked;
+
+      if ([ut1, ut2, ut3].some(val => val < 0 || val > 50)) {
+        alert("UT Marks must be between 0 and 50");
+        return;
+      }
+      if (model < 0 || model > 100) {
+        alert("Model Exam Marks must be between 0 and 100");
+        return;
+      }
+
+      const utScore = ((ut1 * 2 / 10) + (ut2 * 2 / 10) + (ut3 * 2 / 10));
+      const modelScore = model / 20; // 100 -> 5
+      const assignmentScore = assignment ? 5 : 0;
+
+      const totalInternal = utScore + modelScore + assignmentScore;
+
+      document.getElementById('resultTheory').textContent =
+        `Total Internal Mark Obtained: ${totalInternal.toFixed(2)} / 40`;
+    }
+  </script>
+
+</body>
+</html>
